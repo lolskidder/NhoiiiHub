@@ -1661,6 +1661,7 @@ G.KHAY_HUB.Parent = targetParent
 -- Luu y: key kiem tra o client, khong phai he thong bao mat server-side.
 -- =========================
 local REQUIRED_KEY = "KHAY-2026"
+local GET_KEY_URL = "https://example.com/get-key" -- Thay bang link lay key cua ban
 local keyUnlocked = false
 
 -- Chan tuong tac voi HUB cho den khi nhap dung key
@@ -1752,7 +1753,7 @@ KeyStatus.Parent = KeyCard
 local KeySubmit = Instance.new("TextButton")
 KeySubmit.Name = "VerifyKey"
 KeySubmit.Position = UDim2.new(0, 20, 1, -48)
-KeySubmit.Size = UDim2.new(1, -40, 0, 34)
+KeySubmit.Size = UDim2.new(0.58, -10, 0, 34)
 KeySubmit.BackgroundColor3 = Color3.fromRGB(0, 160, 205)
 KeySubmit.BorderSizePixel = 0
 KeySubmit.Font = Enum.Font.GothamBold
@@ -1765,6 +1766,51 @@ KeySubmit.Parent = KeyCard
 local SubmitCorner = Instance.new("UICorner")
 SubmitCorner.CornerRadius = UDim.new(0, 7)
 SubmitCorner.Parent = KeySubmit
+
+local GetKeyButton = Instance.new("TextButton")
+GetKeyButton.Name = "GetKey"
+GetKeyButton.Position = UDim2.new(0.62, -10, 1, -48)
+GetKeyButton.Size = UDim2.new(0.38, -10, 0, 34)
+GetKeyButton.BackgroundColor3 = Color3.fromRGB(55, 45, 85)
+GetKeyButton.BorderSizePixel = 0
+GetKeyButton.Font = Enum.Font.GothamBold
+GetKeyButton.Text = "GET KEY"
+GetKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyButton.TextSize = 12
+GetKeyButton.ZIndex = 5002
+GetKeyButton.Parent = KeyCard
+
+local GetKeyCorner = Instance.new("UICorner")
+GetKeyCorner.CornerRadius = UDim.new(0, 7)
+GetKeyCorner.Parent = GetKeyButton
+
+GetKeyButton.MouseButton1Click:Connect(function()
+    if GET_KEY_URL == "" or GET_KEY_URL == "https://example.com/get-key" then
+        KeyStatus.Text = "Set GET_KEY_URL to your key page first"
+        KeyStatus.TextColor3 = Color3.fromRGB(255, 190, 80)
+        return
+    end
+
+    local ok = pcall(function()
+        if typeof(setclipboard) == "function" then
+            setclipboard(GET_KEY_URL)
+        end
+    end)
+
+    if ok then
+        KeyStatus.Text = "GET KEY link copied (if supported)"
+        KeyStatus.TextColor3 = Color3.fromRGB(70, 235, 150)
+    else
+        KeyStatus.Text = "Open this link manually: " .. GET_KEY_URL
+        KeyStatus.TextColor3 = Color3.fromRGB(255, 190, 80)
+    end
+
+    pcall(function()
+        if typeof(setclipboard) == "function" then
+            setclipboard(GET_KEY_URL)
+        end
+    end)
+end)
 
 local function verifyKey()
     if keyUnlocked then return end
