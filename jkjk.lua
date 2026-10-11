@@ -6,6 +6,41 @@
 
 local G = {}
 
+-- CAU HINH ANH: doi IMAGE_URL neu muon dung anh khac.
+local IMAGE_ID = "0" -- Dien ID Roblox neu co, vi du "1234567890"
+local IMAGE_URL = "https://files.catbox.moe/ja1l5a.jpg"
+local IMAGE_FILE = "khayhub_image.jpg"
+local cachedImageAsset
+
+local function getImageAsset()
+    if IMAGE_ID ~= "0" and IMAGE_ID ~= "" then
+        return "rbxassetid://" .. IMAGE_ID
+    end
+
+    if cachedImageAsset then
+        return cachedImageAsset
+    end
+
+    -- Executor can ho tro writefile/getcustomasset de dung anh URL ben ngoai.
+    local ok, asset = pcall(function()
+        if type(writefile) ~= "function" or type(getcustomasset) ~= "function" then
+            error("Executor khong ho tro writefile/getcustomasset")
+        end
+        local data = game:HttpGet(IMAGE_URL)
+        writefile(IMAGE_FILE, data)
+        return getcustomasset(IMAGE_FILE)
+    end)
+
+    if ok and type(asset) == "string" then
+        cachedImageAsset = asset
+        return asset
+    end
+
+    -- Du phong: mot so moi truong co the chap nhan URL truc tiep.
+    warn("KHAYHUB: khong tai duoc anh qua getcustomasset; thu URL truc tiep.")
+    return IMAGE_URL
+end
+
 -- KHAY_HUB (ScreenGui)
 G.KHAY_HUB = Instance.new("ScreenGui")
 G.KHAY_HUB.Name = "LunarX Hub"
@@ -861,7 +896,7 @@ G.ImageLabel.BackgroundTransparency = 1
 G.ImageLabel.Position = UDim2.new(0.5, 0, 0.41999998688697815, 0)
 G.ImageLabel.Size = UDim2.new(0, 105, 0, 105)
 G.ImageLabel.ZIndex = 1001
-G.ImageLabel.Image = "rbxassetid://76026241322125"
+G.ImageLabel.Image = getImageAsset()
 G.ImageLabel.ScaleType = Enum.ScaleType.Fit
 G.ImageLabel.Parent = G.KHAY_CINEMATIC_INTRO
 
@@ -942,7 +977,7 @@ G.KHAY_FLOAT.BorderSizePixel = 0
 G.KHAY_FLOAT.Position = UDim2.new(1, -195, 0, 14)
 G.KHAY_FLOAT.Size = UDim2.new(0, 54, 0, 54)
 G.KHAY_FLOAT.ZIndex = 1001
-G.KHAY_FLOAT.Image = "rbxassetid://76026241322125"
+G.KHAY_FLOAT.Image = getImageAsset()
 G.KHAY_FLOAT.ScaleType = Enum.ScaleType.Crop
 G.KHAY_FLOAT.Parent = G.KHAY_HUB
 
@@ -1489,7 +1524,7 @@ G.ImageLabel_2.BorderSizePixel = 0
 G.ImageLabel_2.Position = UDim2.new(0, 10, 0, 10)
 G.ImageLabel_2.Size = UDim2.new(0, 48, 0, 48)
 G.ImageLabel_2.ZIndex = 50
-G.ImageLabel_2.Image = "https://files.catbox.moe/ja1l5a.jpg"
+G.ImageLabel_2.Image = getImageAsset()
 G.ImageLabel_2.ScaleType = Enum.ScaleType.Crop
 G.ImageLabel_2.Parent = G.KHAY_PANEL
 
