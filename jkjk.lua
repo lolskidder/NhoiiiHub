@@ -1654,6 +1654,141 @@ local old = targetParent:FindFirstChild("KHAY_HUB")
 if old then old:Destroy() end
 G.KHAY_HUB.Parent = targetParent
 
+-- =========================
+-- KHAYHUB KEY SYSTEM
+-- Key mac dinh: KHAY-2026
+-- Doi REQUIRED_KEY neu muon thay key.
+-- Luu y: key kiem tra o client, khong phai he thong bao mat server-side.
+-- =========================
+local REQUIRED_KEY = "KHAY-2026"
+local keyUnlocked = false
+
+-- Chan tuong tac voi HUB cho den khi nhap dung key
+G.KHAY_PANEL.Visible = false
+G.KHAY_FLOAT.Visible = false
+
+local KeyOverlay = Instance.new("Frame")
+KeyOverlay.Name = "KHAY_KEY_OVERLAY"
+KeyOverlay.Size = UDim2.new(1, 0, 1, 0)
+KeyOverlay.Position = UDim2.new(0, 0, 0, 0)
+KeyOverlay.BackgroundColor3 = Color3.fromRGB(8, 7, 16)
+KeyOverlay.BackgroundTransparency = 0.08
+KeyOverlay.BorderSizePixel = 0
+KeyOverlay.ZIndex = 5000
+KeyOverlay.Parent = G.KHAY_HUB
+
+local KeyCard = Instance.new("Frame")
+KeyCard.Name = "KeyCard"
+KeyCard.AnchorPoint = Vector2.new(0.5, 0.5)
+KeyCard.Position = UDim2.new(0.5, 0, 0.5, 0)
+KeyCard.Size = UDim2.new(0, 340, 0, 225)
+KeyCard.BackgroundColor3 = Color3.fromRGB(18, 14, 32)
+KeyCard.BorderSizePixel = 0
+KeyCard.ZIndex = 5001
+KeyCard.Parent = KeyOverlay
+
+local KeyCorner = Instance.new("UICorner")
+KeyCorner.CornerRadius = UDim.new(0, 12)
+KeyCorner.Parent = KeyCard
+
+local KeyStroke = Instance.new("UIStroke")
+KeyStroke.Color = Color3.fromRGB(0, 210, 255)
+KeyStroke.Thickness = 1.5
+KeyStroke.Parent = KeyCard
+
+local KeyTitle = Instance.new("TextLabel")
+KeyTitle.BackgroundTransparency = 1
+KeyTitle.Position = UDim2.new(0, 16, 0, 18)
+KeyTitle.Size = UDim2.new(1, -32, 0, 32)
+KeyTitle.Font = Enum.Font.GothamBold
+KeyTitle.Text = "KHAYHUB • KEY SYSTEM"
+KeyTitle.TextColor3 = Color3.fromRGB(0, 210, 255)
+KeyTitle.TextSize = 18
+KeyTitle.ZIndex = 5002
+KeyTitle.Parent = KeyCard
+
+local KeyHint = Instance.new("TextLabel")
+KeyHint.BackgroundTransparency = 1
+KeyHint.Position = UDim2.new(0, 18, 0, 54)
+KeyHint.Size = UDim2.new(1, -36, 0, 24)
+KeyHint.Font = Enum.Font.Gotham
+KeyHint.Text = "Nhap key de mo khoa HUB"
+KeyHint.TextColor3 = Color3.fromRGB(190, 185, 210)
+KeyHint.TextSize = 13
+KeyHint.ZIndex = 5002
+KeyHint.Parent = KeyCard
+
+local KeyInput = Instance.new("TextBox")
+KeyInput.Name = "KeyInput"
+KeyInput.Position = UDim2.new(0, 20, 0, 91)
+KeyInput.Size = UDim2.new(1, -40, 0, 40)
+KeyInput.BackgroundColor3 = Color3.fromRGB(29, 24, 47)
+KeyInput.BorderSizePixel = 0
+KeyInput.ClearTextOnFocus = false
+KeyInput.Font = Enum.Font.Gotham
+KeyInput.PlaceholderText = "Nhap key..."
+KeyInput.PlaceholderColor3 = Color3.fromRGB(130, 125, 150)
+KeyInput.Text = ""
+KeyInput.TextColor3 = Color3.fromRGB(245, 245, 255)
+KeyInput.TextSize = 14
+KeyInput.ZIndex = 5002
+KeyInput.Parent = KeyCard
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 7)
+InputCorner.Parent = KeyInput
+
+local KeyStatus = Instance.new("TextLabel")
+KeyStatus.BackgroundTransparency = 1
+KeyStatus.Position = UDim2.new(0, 20, 0, 137)
+KeyStatus.Size = UDim2.new(1, -40, 0, 20)
+KeyStatus.Font = Enum.Font.Gotham
+KeyStatus.Text = "KEY STATUS: WAITING"
+KeyStatus.TextColor3 = Color3.fromRGB(190, 185, 210)
+KeyStatus.TextSize = 11
+KeyStatus.ZIndex = 5002
+KeyStatus.Parent = KeyCard
+
+local KeySubmit = Instance.new("TextButton")
+KeySubmit.Name = "VerifyKey"
+KeySubmit.Position = UDim2.new(0, 20, 1, -48)
+KeySubmit.Size = UDim2.new(1, -40, 0, 34)
+KeySubmit.BackgroundColor3 = Color3.fromRGB(0, 160, 205)
+KeySubmit.BorderSizePixel = 0
+KeySubmit.Font = Enum.Font.GothamBold
+KeySubmit.Text = "VERIFY KEY"
+KeySubmit.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeySubmit.TextSize = 13
+KeySubmit.ZIndex = 5002
+KeySubmit.Parent = KeyCard
+
+local SubmitCorner = Instance.new("UICorner")
+SubmitCorner.CornerRadius = UDim.new(0, 7)
+SubmitCorner.Parent = KeySubmit
+
+local function verifyKey()
+    if keyUnlocked then return end
+    if string.gsub(KeyInput.Text, "^%s*(.-)%s*$", "%1") == REQUIRED_KEY then
+        keyUnlocked = true
+        KeyStatus.Text = "KEY STATUS: ACCESS GRANTED"
+        KeyStatus.TextColor3 = Color3.fromRGB(70, 235, 150)
+        KeySubmit.Text = "UNLOCKED"
+        task.wait(0.25)
+        KeyOverlay:Destroy()
+        G.KHAY_FLOAT.Visible = true
+        G.KHAY_PANEL.Visible = true
+    else
+        KeyStatus.Text = "KEY STATUS: INVALID KEY"
+        KeyStatus.TextColor3 = Color3.fromRGB(255, 90, 110)
+        KeyInput.Text = ""
+    end
+end
+
+KeySubmit.MouseButton1Click:Connect(verifyKey)
+KeyInput.FocusLost:Connect(function(enterPressed)
+    if enterPressed then verifyKey() end
+end)
+
 -- Button state (ULTRA_TP = Anti-Hit toggle)
 local function refreshButton()
 	if AntiHitEnabled then
