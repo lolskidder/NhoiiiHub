@@ -1660,8 +1660,8 @@ G.KHAY_HUB.Parent = targetParent
 -- Doi REQUIRED_KEY neu muon thay key.
 -- Luu y: key kiem tra o client, khong phai he thong bao mat server-side.
 -- =========================
-local REQUIRED_KEY = "KHAY-2026"
-local GET_KEY_URL = "https://example.com/get-key" -- Thay bang link lay key cua ban
+local REQUIRED_KEY = "LunarX-9OU-OP7"
+local GET_KEY_URL = "https://pastefy.app/j5tUDZvf" -- Thay bang link lay key cua ban
 local keyUnlocked = false
 
 -- Chan tuong tac voi HUB cho den khi nhap dung key
