@@ -6,21 +6,6 @@
 
 local G = {}
 
--- Catbox logo: executors with writefile + getcustomasset/getsynasset support can load it locally.
-local LOGO_URL = "https://files.catbox.moe/ja1l5a.jpg"
-local LOGO_IMAGE = "rbxassetid://76026241322125" -- fallback if local asset loading is unsupported
-pcall(function()
-    if type(writefile) ~= "function" then return end
-    local getAsset = getcustomasset or getsynasset
-    if type(getAsset) ~= "function" then return end
-    local imagePath = "khay_hub_logo.jpg"
-    local imageData = game:HttpGet(LOGO_URL)
-    if type(imageData) == "string" and #imageData > 0 then
-        writefile(imagePath, imageData)
-        LOGO_IMAGE = getAsset(imagePath)
-    end
-end)
-
 -- KHAY_HUB (ScreenGui)
 G.KHAY_HUB = Instance.new("ScreenGui")
 G.KHAY_HUB.Name = "LunarX Hub"
@@ -876,7 +861,7 @@ G.ImageLabel.BackgroundTransparency = 1
 G.ImageLabel.Position = UDim2.new(0.5, 0, 0.41999998688697815, 0)
 G.ImageLabel.Size = UDim2.new(0, 105, 0, 105)
 G.ImageLabel.ZIndex = 1001
-G.ImageLabel.Image = LOGO_IMAGE
+G.ImageLabel.Image = "rbxassetid://76026241322125"
 G.ImageLabel.ScaleType = Enum.ScaleType.Fit
 G.ImageLabel.Parent = G.KHAY_CINEMATIC_INTRO
 
@@ -957,7 +942,7 @@ G.KHAY_FLOAT.BorderSizePixel = 0
 G.KHAY_FLOAT.Position = UDim2.new(1, -195, 0, 14)
 G.KHAY_FLOAT.Size = UDim2.new(0, 54, 0, 54)
 G.KHAY_FLOAT.ZIndex = 1001
-G.KHAY_FLOAT.Image = LOGO_IMAGE
+G.KHAY_FLOAT.Image = "rbxassetid://76026241322125"
 G.KHAY_FLOAT.ScaleType = Enum.ScaleType.Crop
 G.KHAY_FLOAT.Parent = G.KHAY_HUB
 
@@ -1504,7 +1489,7 @@ G.ImageLabel_2.BorderSizePixel = 0
 G.ImageLabel_2.Position = UDim2.new(0, 10, 0, 10)
 G.ImageLabel_2.Size = UDim2.new(0, 48, 0, 48)
 G.ImageLabel_2.ZIndex = 50
-G.ImageLabel_2.Image = LOGO_IMAGE
+G.ImageLabel_2.Image = "https://files.catbox.moe/ja1l5a.jpg"
 G.ImageLabel_2.ScaleType = Enum.ScaleType.Crop
 G.ImageLabel_2.Parent = G.KHAY_PANEL
 
